@@ -47,6 +47,7 @@ watch(dialogVisible, (newValue) => {
 
             <div class="flex justify-end gap-2">
                 <Button 
+                    @click="dialogVisible = false"
                     type="button" 
                     label="Cancel" 
                     severity="secondary" 

@@ -8,9 +8,11 @@ import Aura from '@primevue/themes/aura';
 import Tooltip from 'primevue/tooltip';
 import ConfirmationService from 'primevue/confirmationservice';
 import { store } from './store/store';
+import { createPinia } from 'pinia';
 
 
 const app = createApp(App);
+const pinia = createPinia()
 app.use(PrimeVue, {
     theme: {
         preset: Aura,
@@ -24,6 +26,7 @@ app.use(PrimeVue, {
 app.use(router)
 app.directive('tooltip', Tooltip);
 app.use(ConfirmationService);
+app.use(pinia)
 app.use(ToastService);
 app.use(store)
 app.mount('#app')

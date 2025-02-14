@@ -6,45 +6,19 @@ import { PlusIcon } from '@heroicons/vue/24/outline';
 import {InputText} from 'primevue';
 import IconField from 'primevue/iconfield';
 import InputIcon from 'primevue/inputicon';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import ChatSideLoading from '../Loading/ChatSideLoading.vue';
-
+import { store } from '../../store/store';
 const Loadings = [1, 2, 3, 4, 5, 6]
+import { useChatStore } from '../../store/useChat';
+import { Conversation } from '../../types/types';
+import { watch } from 'fs';
 
-const conversations = [
-  {
-    id: '1',
-    avatar: 'A',
-    name: 'Alice',
-    message: 'Hi, how are you?',
-    count: 2,
-    time: '12:40',
-  },
-  {
-    id: '2',
-    avatar: 'B',
-    name: 'Bob',
-    message: 'Let\'s meet tomorrow!',
-    count: 5,
-    time: '13:05',
-  },
-  {
-    id: '3',
-    avatar: 'C',
-    name: 'Charlie',
-    message: 'I have a new project for us I have a new project for us.',
-    count: 0,
-    time: '14:30',
-  },
-  {
-    id: '4',
-    avatar: 'D',
-    name: 'David',
-    message: 'Check out the latest updates!',
-    count: 3,
-    time: '15:00',
-  },
-];
+const useChat = useChatStore()
+const conversations = computed(() => JSON.parse(JSON.stringify(useChat.conversations)))
+
+const avatar = ref<string>('A')
+
 
 const isOpenSearch = ref<boolean>(false)
 function toggleOpenSearch () {
@@ -54,8 +28,13 @@ function toggleOpenSearch () {
 const isLoadingChat = ref<boolean>(false)
 
 
+onMounted(async () => {
+  await useChat.fetchConversations();
+});
 
-
+function handleSelectConversation (conversationId: string) {
+  useChat.setActiveConversation(conversationId)
+}
 
 
 
@@ -82,14 +61,15 @@ const isLoadingChat = ref<boolean>(false)
          
             <div class="w-full">
               <div v-if="!isLoadingChat">
-                <div v-for="conversation in conversations" :key="conversation.name">
+                <div @click="handleSelectConversation(conversation.conversationId)" v-for="conversation in conversations" :key="conversation.conversationId">
                   <BlockItemConversation 
-                      :avatar="conversation.avatar"
-                      :message="conversation.message"
-                      :name="conversation.name"
-                      :count="conversation.count"
-                      :time="conversation.time"
-                      :activeId="conversation.id"
+                      :avatar="avatar"
+                      :message="conversation.lastMessage"
+                      :name="avatar"
+                      :isSeen="conversation.isSeen"
+                      :time="conversation.updatedAt"
+                      :activeId="conversation.conversationId"
+                      :conversation-id="conversation.conversationId"
                   />
               </div>
               </div>

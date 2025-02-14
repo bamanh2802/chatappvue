@@ -2,7 +2,8 @@
 import { Avatar, Button } from 'primevue';
 
 const props = defineProps({
-    openChatInformation: Function
+    openChatInformation: Function,
+    name: String
 })
 
 </script>

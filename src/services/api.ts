@@ -24,10 +24,19 @@ export const Login = async (username: string, password: string) => {
 
 
 export const getConversation = async () => {
-  return api.get('/api/conversations')
+  return api.get('/conversations')
   .then(response => response.data)
   .catch(error => {
     console.error('Get Conversations Error', error);
+    throw error;
+  })
+}
+
+export const getMessageInConversation = async (conversationId: string) => {
+  return api.get(`/conversations/${conversationId}/messages`)
+  .then(response => response.data)
+  .catch(error => {
+    console.error('Get Message Error', error)
     throw error;
   })
 }
